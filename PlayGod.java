@@ -31,11 +31,16 @@ public class PlayGod{
     /**Total number of monsers in the world*/
     private static int numMonsters = 1;
 
+    /**creates creatures and monsters and passes them to a world
+       number of generation times.
+       @param args, input from command line, unused.
+    */
     public static void main(String[] args){
+        int count = 0;
 	World world = firstCase();
 	world.run();
 	generationCount--;
-	//System.out.println("fitness: " + getFitness());
+	System.out.println("fitness: " + getFitness());
 	while(generationCount > 0){
 	    if(!evolve()){
 		break;
@@ -43,11 +48,16 @@ public class PlayGod{
 	    world = new World(worldLength, worldWidth, monsterDelay, creatures, monsters, numTurns);
 	    world.run();
 	    generationCount--;
-	    // System.out.println("fitness: " + getFitness());
+	    System.err.println(getFitness());
+            count++;
+            System.out.println(count);
 	}
     }
 
-
+    /**Takes user input and passes it to on to build the creatures and monsters
+       based on this.
+       * @return the world user input creates.
+       */
     public static World firstCase(){
 	Random variableSelect = new Random();
 	Scanner input = new Scanner(System.in);
@@ -176,7 +186,11 @@ public class PlayGod{
 	return new World(worldLength, worldWidth, monsterDelay, creatures, monsters, numTurns);
     }
 
-
+    /**makes num creatures.
+     * @param num, the number of creatures.
+     * @param variableSelect the random number generator used for picking variables.
+     * @return the array of creatures created.
+     */
     public static Creature[] makeCreatures(int num, Random variableSelect){
 	Creature[] creatures = new Creature[num];
 	int x, y, eatStrawberryInt, eatMushroomInt, reactStrawberry, 
@@ -219,6 +233,11 @@ public class PlayGod{
 	return creatures;
     }
 
+    /**makes num monsters.
+     * @param num, the number of monsters.
+     * @param variableSelect the random number generator used for picking variables.
+     * @return the array of monsters created.
+     */
     public static Monster[] makeMonsters(int num, Random variableSelect){
 	Monster[] monsters = new Monster[num];
 	int x, y, maxX = worldLength, maxY = worldWidth;
@@ -231,7 +250,9 @@ public class PlayGod{
 	
     }
 
-
+    /**setups the creatures to be passed on to the mating method.
+       @return returns true if there are any creatures left.
+     */
     public static boolean evolve(){
 	ArrayList<Creature> aliveCreatures = new ArrayList<Creature>();
 	Creature[] matingCreatures;
@@ -252,6 +273,12 @@ public class PlayGod{
 	return true;
     }
 
+    /**Makes the same number of new creatures as for the next generation as there
+     * were creatures this generation by repeatively taking two creatures from
+     * aliveCreatures based on weighted random selection and passes them onto
+     * genesplice to create a new ceature.
+     * @param aliveCreatures an array of alive creatures.
+     */
     public static void mate(Creature[] aliveCreatures){
 	Random selectiveBreading = new Random();
 	Creature[] newCreatures = new Creature[creatures.length];
@@ -289,7 +316,14 @@ public class PlayGod{
 	creatures = newCreatures;
     }    
 
-
+    /**Builds a new creature based on the two parent creatures by taking a random point within the chromosome
+     *and taking everything up to that point from creature a and everything beyond that point from creature b
+     *then mutating the chromosome and passing this into the new creature.
+     *@param a Creatures a, used for mating.
+     * @param b Creature b, used for mating.
+     * @param splicePointSelector used to pick the point in the chromosome to splice.
+     * @return the new Creature.
+     */
     public static Creature geneSplice(Creature a, Creature b, Random splicePointSelector){
 	int splicePoint = splicePointSelector.nextInt(13), x = splicePointSelector.nextInt(worldWidth), y = splicePointSelector.nextInt(worldLength);
 	int[] chromosomeA = a.extractChromosome(), chromosomeB = b.extractChromosome(), newChromosome = new int[13];
@@ -312,65 +346,70 @@ public class PlayGod{
 			    newChromosome[11], newChromosome[12], foodEnergy, energyLoss);
 			    
     }
-
+    /**Takes the chromosome and 1 in 200 times it changes it to a different gene.
+     * @param the creatures chromosome.
+     * @return the possibly updates creature chromosome.
+     */
     public static int[] mutate(int[] chromosome){
 	Random random = new Random();
-	int chance = random.nextInt(200) + 1;
-	if(chance == 100){
+        int num = 100, num2 = 200;
+	int chance = random.nextInt(num2) + 1;
+	if(chance == num){
 	    chromosome[0] = random.nextInt(2);
 	}
-	chance = random.nextInt(200) + 1;
-	if(chance == 100){
+	chance = random.nextInt(num2) + 1;
+	if(chance == num){
 	    chromosome[1] = random.nextInt(2);
 	}
-	chance = random.nextInt(200) + 1;
-	if(chance == 100){
+	chance = random.nextInt(num2) + 1;
+	if(chance == num){
 	    chromosome[2] = random.nextInt(4) + 1;
 	}
-	chance = random.nextInt(200) + 1;
-	if(chance == 100){
+	chance = random.nextInt(num2) + 1;
+	if(chance == num){
 	    chromosome[3] = random.nextInt(4) + 1;
 	}
-	chance = random.nextInt(200) + 1;
-	if(chance == 100){
+	chance = random.nextInt(num2) + 1;
+	if(chance == num){
 	    chromosome[4] = random.nextInt(4) + 1;
 	}
-	chance = random.nextInt(200) + 1;
-	if(chance == 100){
+	chance = random.nextInt(num2) + 1;
+	if(chance == num){
 	    chromosome[5] = random.nextInt(4) + 1;
 	}
-	chance = random.nextInt(200) + 1;
-	if(chance == 100){
+	chance = random.nextInt(num2) + 1;
+	if(chance == num){
 	    chromosome[6] = random.nextInt(4) + 1;
 	}
-	chance = random.nextInt(200) + 1;
-	if(chance == 100){
+	chance = random.nextInt(num2) + 1;
+	if(chance == num){
 	    chromosome[7] = random.nextInt(1000) + 1;
 	}
-	chance = random.nextInt(200) + 1;
-	if(chance == 100){
+	chance = random.nextInt(num2) + 1;
+	if(chance == num){
 	    chromosome[8] = random.nextInt(1000) + 1;
 	}
-	chance = random.nextInt(200) + 1;
-	if(chance == 100){
+	chance = random.nextInt(num2) + 1;
+	if(chance == num){
 	    chromosome[9] = random.nextInt(1000) + 1;
 	}
-	chance = random.nextInt(200) + 1;
-	if(chance == 100){
+	chance = random.nextInt(num2) + 1;
+	if(chance == num){
 	    chromosome[10] = random.nextInt(1000) + 1;
 	}
-	chance = random.nextInt(200) + 1;
-	if(chance == 100){
+	chance = random.nextInt(num2) + 1;
+	if(chance == num){
 	    chromosome[11] = random.nextInt(1000) + 1;
 	}
-	chance = random.nextInt(200) + 1;
-	if(chance == 100){
+	chance = random.nextInt(num2) + 1;
+	if(chance == num){
 	    chromosome[12] = random.nextInt(1000) + 1;
 	}
 	
 	return chromosome;
     }
-
+    /**Gets the total energy of the creatures
+     */
     public static double getFitness(){
 	double energy = 0.0, hold = 0.0;
 	for(int i = 0; i < creatures.length; i++){

@@ -65,7 +65,7 @@ public class Draw extends JPanel{
       this.mushroomGrid = mushroomGrid;
       repaint();
       try{
-	  Thread.sleep(10);
+	  Thread.sleep(50);
       }catch(Exception e){
       }
     }

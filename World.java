@@ -2,17 +2,35 @@ package assign2;
 
 import java.util.*;
 
+/**The world class controls movement of all those within it*/
 public class World{
-    
-    private Monster[] monsters;
-    private Creature[] creatures;
-    private int[][] berryGrid;
-    private int[][] mushroomGrid;
-    private int finalTime = 0;
-    private Draw worldImage;
 
+    /**All the monsters*/
+    private Monster[] monsters;
+    /**All the creatures*/
+    private Creature[] creatures;
+    /**Quantity of berries at all points of the grid*/
+    private int[][] berryGrid;
+    /**Quantity of mushrooms at all points of the grid*/
+    private int[][] mushroomGrid;
+    /**number of moves that world preforms*/
+    private int finalTime = 0;
+    /**Draws the graphical representation of the world*/
+    private Draw worldImage;
+    /**Number of turns a monster has to wait before it gets a turn*/
     private final int MONSTERDELAY;
 
+    /**Constructor for the world class.
+     * Will set the global data fields and then generates a world of the sizes given,
+     * and it will remove all initial deaths caused by creatures and monsters spawning
+     * at the same point.
+     * @param worldLength the length of the world.
+     * @param worldWidth the width of the world.
+     * @param t the monster delay.
+     * @param creatures all the creatures in the world.
+     * @param monsters all the monsters in the world.
+     * @param finalTime the amount of turns in the world.
+     */
     public World(int worldLength, int worldWidth, int t, Creature[] creatures, Monster[] monsters, int finalTime){
         this.monsters = monsters;
         this.creatures = creatures;
@@ -25,9 +43,13 @@ public class World{
 	generateWorld(worldLength*worldWidth);
 	findInitialDeaths();
         MONSTERDELAY = t;
-	worldImage = new Draw(worldLength, worldWidth, creatures[0].getEnergy(), monsters, creatures, berryGrid, mushroomGrid);
+        worldImage = new Draw(worldLength, worldWidth, creatures[0].getEnergy(), monsters, creatures, berryGrid, mushroomGrid);
+        //Uncomment above to see images.
     }
-    
+
+    /** Finds if creatures spawned at the same time as a monster
+     * and kills all of them that do.
+     */
     public void findInitialDeaths(){
 	int[] monsterPos, creaturePos;
 	for(int i = 0; i < creatures.length; i++){
@@ -41,6 +63,12 @@ public class World{
 	}
     }
 
+    /**Generates the berries and mushroom grids to be the size
+     * of the world and randomly places half the world size worth of
+     * berries and a quarter the world size worth of mushrooms
+     * around the map.
+     * @param worldSize the size of the world.
+     */
     public void generateWorld(int worldSize){
 	Random posGen = new Random();
 	int berryCount = worldSize/2, mushroomCount = worldSize/4, x, y, amount = 0;
@@ -80,7 +108,11 @@ public class World{
 	    }
 	}
     }
-    
+
+    /**sets the sight range of the creatures and monster
+     * @param l the length of the world.
+     * @param w the width of the world.
+     */
     public void setSightRange(int l, int w){
 	int range = (l + w)/2;
 	range /= 10;
@@ -89,6 +121,10 @@ public class World{
 	creatures[0].setSightRange(range);
     }
 
+    /**Cycles through all the monsters and alive creatures, calling their run methods
+     * when that being is supposed to move and then killing all creatures
+     * that are at the same coordinates as a monsters.
+     */
     public void run(){
         ArrayList<Creature> aliveCreatures = new ArrayList<Creature>();
 	int size = 0;
@@ -168,9 +204,11 @@ public class World{
 		    }
 		}
 	    }
-	    worldImage.update(monsters,creatures,berryGrid,mushroomGrid);
+            worldImage.update(monsters,creatures,berryGrid,mushroomGrid);
+            // for showing the image.
 	}
-	worldImage.close();
+        	worldImage.close();
+        // for showing the image.
     }
 
 }
